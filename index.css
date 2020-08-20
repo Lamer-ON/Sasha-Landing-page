@@ -23,6 +23,8 @@ li {
 body {
 	/*margin: 0 auto;
 	font-family: 'Raleway', sans-serif;*/
+
+
 	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	font-size: 16px;
 	font-weight: 400;
@@ -31,8 +33,11 @@ body {
 	background-color: #fff;
 	margin: 0;
 	padding: 0;
-
 }
+
+/*body.lock {
+	overflow: hidden;
+}*/
 
 /*
 **,
@@ -47,7 +52,10 @@ body {
 
 
 
-
+.wrapper {
+	overflow: hidden;
+	min-height: 100%;
+}
 
 
 /*!             HEADER                  */
@@ -159,14 +167,12 @@ nav {
 
 .topnav a:hover {
 	border-bottom: 2px solid #000;
+	color: #4976CD;
 }
 
 .topnav .icon {
 	display: none;
 }
-
-
-
 
 
 
@@ -244,6 +250,7 @@ h1 {
 	box-sizing: border-box;
 	max-width: 100%;
 	opacity: 0.8;
+	box-shadow: 5px 5px 15px 2px #B1A3B0;
 }
 
 /*.photo-itm img:hover {
@@ -428,6 +435,8 @@ h1 {
 	opacity: 1;
 	pointer-events: auto;
 	overflow-y: auto;
+
+	/*overflow-y: none;*/
 }
 
 /* ширина модального окна и его отступы от экрана */
@@ -549,10 +558,15 @@ h1 {
 	overflow: auto;
 }
 
-.slider {
+.slider,
+.slider1,
+.slider2,
+.slider3,
+.slider4 {
 	position: relative;
 	overflow: hidden;
 }
+
 
 .slider__wrapper {
 	display: flex;
@@ -713,3 +727,89 @@ h1 {
 	}
 
 }
+
+/*!!---------------------- Popup Прайс */
+.popup {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	top: 0;
+	left: 0;
+	opacity: 0;
+	visibility: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
+	/*overflow-y: hidden;*/
+	transition: all 0.5s ease-out 0s;
+}
+
+.popup.open {
+	opacity: 1;
+	visibility: visible;
+	overflow-y: hidden;
+
+}
+
+.popup.open .popup_content {
+	transform: perspective(600px) translate(0px, 0%) rotateX(0deg);
+	opacity: 1;
+}
+
+/*.popup:target {
+	opacity: 1;
+	visibility: visible;
+}
+
+.popup:target .popup_content {
+	transform: perspective(600px) translate(0px, 0%) rotateX(0deg);
+	opacity: 1;
+}*/
+
+
+/* del */
+.popup_area {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+
+.popup_body {
+	min-height: 100%;
+	display: flex;
+	align-items: top;
+	justify-content: center;
+	padding: 30px 10px;
+	transition: all 0.5s ease-out 0s;
+}
+
+.popup_content {
+	background-color: #fff;
+	color: #000;
+	max-width: 800px;
+	padding: 20px;
+	position: relative;
+	transition: all 0.5s ease 0s;
+	opacity: 0;
+	/*transform: translate(0px, -100%);*/
+	transform: perspective(600px) translate(0px, -100%) rotateX(45deg);
+}
+
+.popup_close {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	font-size: 30px;
+	color: #000;
+	text-decoration: none;
+}
+
+.popup_title {
+	font-size: 30px;
+	margin: 0px 0px 1em 0px;
+}
+
+.popup_text {}
