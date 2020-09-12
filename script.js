@@ -1,6 +1,106 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+
+	//!!	Полифилл для matches:
+	(function (ELEMENT) {
+		ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector || ELEMENT.oMatchesSelector || ELEMENT.webkitMatchesSelector;
+		ELEMENT.closest = ELEMENT.closest || function closest(selector) {
+			if (!this) return null;
+			if (this.matches(selector)) return this;
+			if (!this.parentElement) {
+				return null
+			} else return this.parentElement.closest(selector)
+		};
+	}(Element.prototype));
+
+	//!!	Полифилл для closest
+
+	(function () {
+
+		// проверяем поддержку
+		if (!Element.prototype.closest) {
+
+			// реализуем
+			Element.prototype.closest = function (css) {
+				var node = this;
+
+				while (node) {
+					if (node.matches(css)) return node;
+					else node = node.parentElement;
+				}
+				return null;
+			};
+		}
+
+	})();
+
+	//!! Полифил		forEach
+
+	// Шаги алгоритма ECMA-262, 5-е издание, 15.4.4.18
+	// Ссылка (en): http://es5.github.io/#x15.4.4.18
+	// Ссылка (ru): http://es5.javascript.ru/x15.4.html#x15.4.4.18
+	if (!Array.prototype.forEach) {
+		console.log('Polyfill');
+		Array.prototype.forEach = function (callback, thisArg) {
+
+			var T, k;
+
+			if (this == null) {
+				throw new TypeError(' this is null or not defined');
+			}
+
+			// 1. Положим O равным результату вызова ToObject passing the |this| value as the argument.
+			var O = Object(this);
+
+			// 2. Положим lenValue равным результату вызова внутреннего метода Get объекта O с аргументом "length".
+			// 3. Положим len равным ToUint32(lenValue).
+			var len = O.length >>> 0;
+
+			// 4. Если IsCallable(callback) равен false, выкинем исключение TypeError.
+			// Смотрите: http://es5.github.com/#x9.11
+			if (typeof callback !== 'function') {
+				throw new TypeError(callback + ' is not a function');
+			}
+
+			// 5. Если thisArg присутствует, положим T равным thisArg; иначе положим T равным undefined.
+			if (arguments.length > 1) {
+				T = thisArg;
+			}
+
+			// 6. Положим k равным 0
+			k = 0;
+
+			// 7. Пока k < len, будем повторять
+			while (k < len) {
+
+				var kValue;
+
+				// a. Положим Pk равным ToString(k).
+				//   Это неявное преобразование для левостороннего операнда в операторе in
+				// b. Положим kPresent равным результату вызова внутреннего метода HasProperty объекта O с аргументом Pk.
+				//   Этот шаг может быть объединён с шагом c
+				// c. Если kPresent равен true, то
+				if (k in O) {
+
+					// i. Положим kValue равным результату вызова внутреннего метода Get объекта O с аргументом Pk.
+					kValue = O[k];
+
+					// ii. Вызовем внутренний метод Call функции callback с объектом T в качестве значения this и
+					// списком аргументов, содержащим kValue, k и O.
+					callback.call(T, kValue, k, O);
+				}
+				// d. Увеличим k на 1.
+				k++;
+			}
+			// 8. Вернём undefined.
+		};
+	}
+
+
 
 	//!! 							HEADER
 	window.onload = function () {
@@ -31,7 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				_step = _itemWidth / _wrapperWidth * 100, // величина шага (для трансформации)
 				_items = []; // массив элементов
 			// наполнение массива _items
-			_sliderItems.forEach(function (item, index) {
+			// _sliderItems.forEach(function (item, index) {
+			Array.prototype.slice.call(_sliderItems).forEach(function (item, index) {
 				_items.push({
 					item: item,
 					position: index,
@@ -85,7 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			let _setUpListeners = function () {
 				// добавление к кнопкам "назад" и "вперед" обрботчика _controlClick для событя click
-				_sliderControls.forEach(function (item) {
+				// _sliderControls.forEach(function (item) {
+				Array.prototype.slice.call(_sliderControls).forEach(function (item) {
 					item.addEventListener('click', _controlClick);
 				});
 			}
@@ -153,7 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	function popupClose(popupActive, doUnlock = true) {
+	//function popupClose(popupActive, doUnlock = true) {
+	function popupClose(popupActive, doUnlock) {
+		doUnlock = true;
 		if (unlock) {
 			popupActive.classList.remove('open');
 			if (doUnlock) {
